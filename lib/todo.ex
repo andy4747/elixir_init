@@ -1,5 +1,6 @@
 defmodule Todo do
   def ask_file() do
+    IO.puts("")
     IO.puts("Enter filename:")
     IO.gets("> ") |> String.trim()
   end
@@ -19,17 +20,19 @@ defmodule Todo do
   end
 
   def get_commands() do
-    IO.puts(
-      "Todo Commands:\n#1.Show All\t#2.Create\t#3.Delete\t#4.Mark Complete\t#5.Save\t#6.Quit\n"
-    )
+    IO.puts("Todo Commands:\n#1.Show All\t#2.Create\t#3.Delete\t#4.Quit\n")
 
     command = IO.gets("-> $: ")
     String.trim(command)
   end
 
-  def print_task(task) do
-    {desc, status, date} = task
-    IO.puts(~s{Date -> ~~#{date}~~ | Task -> ~~#{desc}~~ | Status -> ~~#{status}~~})
+  def format_task(task) do
+    [desc, status, date] = task
+    ~s{Date -> ~~#{date}~~ | Task -> ~~#{desc}~~ | Status -> ~~#{status}~~}
+  end
+
+  def input_prompt(question) do
+    IO.gets("#{question} \n> ") |> String.trim()
   end
 
   def start() do
@@ -38,7 +41,6 @@ defmodule Todo do
     # parse the data
     # ask command from user.
     # (#1. read, #2. create, #3. delete, #4. update, #5. save, #6. quit)
-
     file = ask_file()
     raw_content = read_file(file)
 
@@ -53,38 +55,44 @@ defmodule Todo do
     case command do
       "1" ->
         Enum.each(parsed_content, fn x ->
-          print_task({Enum.at(x, 2), Enum.at(x, 0), Enum.at(x, 1)})
+          x |> format_task() |> IO.puts()
         end)
 
         start()
 
       "2" ->
-        IO.puts("Created a todo\n")
-        d = String.trim(IO.gets("Enter Description: \n>"))
-        s = String.trim(IO.gets("Enter Status (true/false): \n>"))
-        da = String.trim(IO.gets("Enter date (YYYY-MM-DD)"))
-        task = %{d => {d, s, da}}
-        {desc, status, date} = task[d]
+        d = input_prompt("Enter Description: ")
+        s = input_prompt("Enter Status (true/false): ")
+        da = input_prompt("Enter date (YYYY-MM-DD): ")
+        _task = %{d => {d, s, da}}
 
-        print_task({desc, status, date})
-        # TODO: upload the task to the csv file
+        case File.write("todo.csv", "#{d}, #{s}, #{da}\n", [:append]) do
+          :ok -> IO.puts("Successfully added todo")
+          {:error, reason} -> IO.puts("Failed to add todo: #{reason}")
+        end
+
+        IO.puts("Created a todo\n")
         start()
 
       "3" ->
+        task_name = input_prompt("Enter the task name to delete: ")
+
+        File.stream!("todo.csv")
+        |> Stream.reject(fn line ->
+          String.split(line, ",")
+          |> Enum.at(0)
+          |> String.contains?(task_name)
+        end)
+        |> Stream.into(File.stream!("todo_tmp.csv"))
+        |> Stream.run()
+
+        File.rename!("todo_tmp.csv", "todo.csv")
+
         IO.puts("Todo deleted.\n")
         start()
 
       "4" ->
-        IO.puts("Marked todo as done.\n")
-        start()
-
-      "5" ->
-        IO.puts("New changes saved to file.\n")
-        start()
-
-      "6" ->
         IO.puts("Program Exitted.\n")
-        start()
 
       _ ->
         start()
