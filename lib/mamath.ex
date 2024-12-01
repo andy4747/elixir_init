@@ -4,9 +4,9 @@ defmodule MaMath do
   Each problem will build upon the previous ones to reinforce these concepts.
   """
   @spec debug(any, String.t()) :: any
-  defp debug(list, msg) do
-    IO.puts("#{msg}: #{inspect(list)}")
-    list
+  defp debug(data, msg) do
+    IO.puts("#{msg}: #{inspect(data)}")
+    data
   end
 
   @doc """
