@@ -28,6 +28,14 @@ defmodule MaMath do
   function that takes a sentence and returns a map of word frequencies, using pipes and Enum functions
   """
   @spec count_wordfreq(String.t()) :: map
-  def count_wordfreq(_str) do
+  def count_wordfreq(sentence) do
+    sentence
+    |> String.downcase()
+    |> debug("After converting to lowercase: ")
+    |> String.replace(~r/[^\w\s]/, "")
+    |> debug("After replacing punctuations: ")
+    |> String.split()
+    |> debug("After Splitting: ")
+    |> Enum.reduce(%{}, fn word, acc -> Map.update(acc, word, 1, &(&1 + 1)) end)
   end
 end
