@@ -82,4 +82,15 @@ defmodule MaMath do
     |> Enum.map(fn x -> {x, x * (9 / 5) + 32} end)
     |> Map.new()
   end
+
+  @doc """
+  remove_small_words takes a list of strings, converts each to uppercase, filters out short words (<4 chars), and joins them with commas
+  """
+  @spec remove_small_words([String.t()]) :: [String.t()]
+  def remove_small_words(strs) do
+    strs
+    |> Enum.map(fn x -> String.upcase(x) end)
+    |> Enum.filter(fn x -> String.length(x) > 4 end)
+    |> Enum.join(", ")
+  end
 end
