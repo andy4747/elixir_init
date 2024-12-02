@@ -38,4 +38,30 @@ defmodule MaMath do
     |> debug("After Splitting: ")
     |> Enum.reduce(%{}, fn word, acc -> Map.update(acc, word, 1, &(&1 + 1)) end)
   end
+
+  @doc """
+  returns if a input is a prime number or not
+  """
+  @spec is_prime(integer()) :: boolean()
+  def is_prime(1), do: false
+  def is_prime(2), do: true
+
+  def is_prime(num) when rem(num, 2) == 0 do
+    false
+  end
+
+  def is_prime(num) do
+    new_max = :math.sqrt(num) |> trunc()
+    Enum.all?(3..new_max, fn x -> rem(num, x) != 0 end)
+  end
+
+  @doc """
+  keep_prime_desc takes a range of numbers (1..n), keeps only prime numbers, and returns them in descending order.
+  """
+  @spec keep_prime_desc(pos_integer()) :: [pos_integer()]
+  def keep_prime_desc(n) do
+    1..n
+    |> Enum.filter(fn x -> is_prime(x) end)
+    |> Enum.sort(:desc)
+  end
 end
