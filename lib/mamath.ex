@@ -1,7 +1,6 @@
 defmodule MaMath do
   @moduledoc """
   These select functions specifically emphasize Elixir's pipeline operator |>, Enum functions, and function composition.
-  Each problem will build upon the previous ones to reinforce these concepts.
   """
   @spec debug(any, String.t()) :: any
   defp debug(data, msg) do
@@ -10,7 +9,7 @@ defmodule MaMath do
   end
 
   @doc """
-  Create a pipeline that takes a list of numbers, filters out odds, doubles each number, and returns their sum
+  even_sum takes a list of numbers, filters out odds, doubles each number, and returns their sum
   """
   @spec even_sum([integer]) :: integer
   def even_sum(list) do
@@ -25,7 +24,7 @@ defmodule MaMath do
   end
 
   @doc """
-  function that takes a sentence and returns a map of word frequencies, using pipes and Enum functions
+  count_wordfreq takes a sentence and returns a map of word frequencies, using pipes and Enum functions
   """
   @spec count_wordfreq(String.t()) :: map
   def count_wordfreq(sentence) do
@@ -40,7 +39,7 @@ defmodule MaMath do
   end
 
   @doc """
-  returns if a input is a prime number or not
+  ris_prime eturns if a input is a prime number or not
   """
   @spec is_prime(integer()) :: boolean()
   def is_prime(1), do: false
