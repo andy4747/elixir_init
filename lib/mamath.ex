@@ -57,11 +57,29 @@ defmodule MaMath do
 
   @doc """
   keep_prime_desc takes a range of numbers (1..n), keeps only prime numbers, and returns them in descending order.
+
+  ## Examples
+
+    iex> prime_pipeline(10)
+    [7, 5, 3, 2]
+
+    iex> prime_pipeline(20)
+    [19, 17, 13, 11, 7, 5, 3, 2]
   """
   @spec keep_prime_desc(pos_integer()) :: [pos_integer()]
   def keep_prime_desc(n) do
     1..n
     |> Enum.filter(fn x -> is_prime(x) end)
     |> Enum.sort(:desc)
+  end
+
+  @doc """
+  cel_to_fah transforms a list of temperatures in Celsius to Fahrenheit using pipes and Enum.map
+  """
+  @spec cel_to_fah([integer()]) :: [integer()]
+  def cel_to_fah(list) do
+    list
+    |> Enum.map(fn x -> {x, x * (9 / 5) + 32} end)
+    |> Map.new()
   end
 end
